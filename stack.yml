@@ -1,0 +1,71 @@
+name: discourse-buildable
+icon: discourse
+title: Discourse (buildable)
+# A variant of the Discourse stack: the catalog suggests them to each other.
+variantOf: discourse
+variant: Buildable
+variantDescription: >-
+  Choose this when you need plugins that don't ship with Discourse: list them
+  in a Git repository, or commit your own, and Wodby builds Discourse with them.
+
+services:
+- name: discourse
+  title: Discourse
+  service: discourse-buildable
+  required: true
+  main: true
+  links:
+  - name: db
+    service: postgres
+  - name: redis
+    service: redis
+  - name: sendmail
+    service: opensmtpd
+  volumes:
+  - name: data
+    size: 20
+  workloads:
+  - name: main
+    containers:
+    - name: discourse
+      resources:
+        request:
+          cpu: 500
+          memory: 2048
+        limit:
+          cpu: 2000
+          memory: 4096
+
+- name: postgres
+  title: PostgreSQL
+  service: postgres
+  required: true
+  env:
+  - name: POSTGRES_DB_EXTENSIONS
+    value: hstore,pg_trgm,unaccent,vector
+  volumes:
+  - name: data
+    size: 20
+
+- name: redis
+  title: Redis
+  service: redis
+  required: true
+  env:
+  - name: REDIS_MAXMEMORY
+    value: 512m
+  - name: REDIS_MAXMEMORY_POLICY
+    value: noeviction
+  - name: REDIS_SAVE_TO_DISK
+    value: '1'
+  volumes:
+  - name: data
+    size: 5
+
+- name: opensmtpd
+  title: OpenSMTPD
+  service: opensmtpd
+  required: true
+  volumes:
+  - name: spool
+    size: 1
