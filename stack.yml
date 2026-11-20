@@ -2,6 +2,7 @@ name: discourse-buildable
 icon: discourse
 docs: https://wodby.com/docs/2.0/stacks/catalog/discourse-buildable/
 title: Discourse (buildable)
+category: collaboration
 # A variant of the Discourse stack: the catalog suggests them to each other.
 variantOf: discourse
 variant: Buildable
